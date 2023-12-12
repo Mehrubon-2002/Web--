@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование данных</title>
+    <!-- Добавьте ссылки на ваши стили и скрипты, если необходимо -->
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+        <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('../images/dashboard.jpg') no-repeat center center fixed;
+            background-size: cover;
+            background-attachment: fixed;
+            overflow-y: scroll;
+            height: 150vh; /* Занимает 100% высоты видимой области */
+        }
+
+            header {
+            background-color: #d4dad2; /* Цвет фона header (можно изменить) */
+            padding: 0.5px;
+            text-align: center;
+        }
+            
+            footer {
+            background-color: #cccfc3;
+            color: rgb(160, 153, 153);
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .user-info6 {
+            position: absolute; /* Позиционируем абсолютно */
+            top: -545px; /* Отступ сверху */
+            left: 1150px; /* Отступ слева */
+            display: flex; /* Используем flex-контейнер для выравнивания элементов */
+            align-items: center; /* Выравниваем элементы по центру вертикально */
+            bottom: 100px;
+        }
+        </style>
+<body>
+    <header>
+        <h1>Редактирование данных</h1>
+    </header>
+
+    <main>
+        
+        <div class="user-info button">
+            <button onclick="window.location.href='LC.html'">Главная</button>
+        </div>
+        
+        <form id="editForm">
+            <!-- Поля для редактирования данных транзакции -->
+            <label for="date">Дата:</label>
+            <input type="date" id="date" name="date" required>
+    
+            <label for="type">Тип операции:</label>
+            <input type="text" id="type" name="type" required>
+    
+            <label for="amount">Сумма:</label>
+            <input type="number" id="amount" name="amount" required>
+    
+            <label for="description">Описание:</label>
+            <textarea id="description" name="description" required></textarea>
+    
+            <!-- Скрытое поле для передачи идентификатора транзакции -->
+            <input type="hidden" id="transactionId" name="transactionId">
+    
+            <button type="button" onclick="updateTransaction()">Сохранить изменения</button>
+        </form>
+    </main>
+    <footer>
+        &copy; 2023 Учетный сервис самозанятых
+    </footer>
+
+
+    <!-- Добавьте ссылки на ваши скрипты, если необходимо -->
+    <script>
+        // Ваш JavaScript для обновления данных транзакции
+        function updateTransaction() {
+    // Получаем значения полей формы
+    var date = document.getElementById("date").value;
+    var type = document.getElementById("type").value;
+    var amount = document.getElementById("amount").value;
+    var description = document.getElementById("description").value;
+    var transactionId = document.getElementById("transactionId").value;
+
+    // Создаем объект XMLHttpRequest
+    var xhr = new XMLHttpRequest();
+
+    // Устанавливаем метод запроса, URL и асинхронность
+    xhr.open("POST", "../php/update_transaction.php", true);
+
+    // Устанавливаем заголовок для отправки данных формы
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    // Устанавливаем обработчик события для изменения состояния запроса
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Обработка ответа от сервера после обновления данных
+            var response = xhr.responseText;
+            console.log(response); // Можете использовать для отладки
+
+            // Перенаправляем пользователя на страницу с транзакциями после обновления
+            window.location.href = "LC.html";
+        }
+    };
+
+    // Отправляем данные формы на сервер
+    xhr.send("date=" + date + "&type=" + type + "&amount=" + amount + "&description=" + description + "&transactionId=" + transactionId);
+    
+}
+
+// Ваш JavaScript для получения идентификатора транзакции из URL
+window.onload = function () {
+    var urlParams = new URLSearchParams(window.location.search);
+    var transactionId = urlParams.get('id');
+
+    // Устанавливаем значение скрытого поля для идентификатора транзакции
+    document.getElementById("transactionId").value = transactionId;
+
+    // Получаем данные о транзакции с сервера и заполняем форму
+    var xhrTransactionData = new XMLHttpRequest();
+    xhrTransactionData.open("GET", "../php/get_transaction_data.php?id=" + transactionId, true);
+    xhrTransactionData.onreadystatechange = function () {
+        if (xhrTransactionData.readyState == 4 && xhrTransactionData.status == 200) {
+            var transactionData = JSON.parse(xhrTransactionData.responseText);
+
+            // Заполняем поля формы данными о транзакции
+            document.getElementById("date").value = transactionData.date;
+            document.getElementById("type").value = transactionData.type;
+            document.getElementById("amount").value = transactionData.amount;
+            document.getElementById("description").value = transactionData.description;
+        }
+    };
+    xhrTransactionData.send();
+};
+    </script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">  
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>Регистрация</title>
+    <style>
+
+.form-control { 
+        width: 180%; /* Установите ширину 100% */
+        max-width: 400px; /* По желанию установите максимальную ширину, чтобы избежать растягивания на больших экранах */
+        margin: 7px ; /* Добавьте немного отступа для разделения полей */
+    }
+
+body {
+    background: url('../images/registr.jpg') no-repeat center center fixed;
+    background-size: cover;
+    background-attachment: fixed;
+    overflow-y: scroll;
+    height: 150vh;
+}
+
+        header {
+            background-color: #5fac8d; /* Цвет фона header (можно изменить) */
+            padding: 10px;
+            text-align: center;
+        }
+
+        .user-info {
+            position: absolute; /* Позиционируем абсолютно */
+            top: 10px; /* Отступ сверху */
+            left: 10px; /* Отступ слева */
+            display: flex; /* Используем flex-контейнер для выравнивания элементов */
+            align-items: center; /* Выравниваем элементы по центру вертикально */
+        }
+        .user-info2 {
+            position: absolute; /* Позиционируем абсолютно */
+            top: 57px; /* Отступ сверху */
+            left: 10px; /* Отступ слева */
+            display: flex; /* Используем flex-контейнер для выравнивания элементов */
+            align-items: center; /* Выравниваем элементы по центру вертикально */
+        }
+        .user-info3 {
+            position: absolute; /* Позиционируем абсолютно */
+            top: 132px; /* Отступ сверху */
+            left: 10px; /* Отступ слева */
+            display: flex; /* Используем flex-контейнер для выравнивания элементов */
+            align-items: center; /* Выравниваем элементы по центру вертикально */
+        }
+        .user-info4 {
+            position: absolute; /* Позиционируем абсолютно */
+            top: 207px; /* Отступ сверху */
+            left: 10px; /* Отступ слева */
+            display: flex; /* Используем flex-контейнер для выравнивания элементов */
+            align-items: center; /* Выравниваем элементы по центру вертикально */
+        }
+
+        .user-info5 {
+            position: absolute; /* Позиционируем абсолютно */
+            top: 300px; /* Отступ сверху */
+            left: 235px; /* Отступ слева */
+           /* display: flex;  Используем flex-контейнер для выравнивания элементов */
+            align-items: center; /* Выравниваем элементы по центру вертикально */
+        }
+
+        .user-info6 {
+            position: absolute; /* Позиционируем абсолютно */
+            top: -545px; /* Отступ сверху */
+            left: 1150px; /* Отступ слева */
+            display: flex; /* Используем flex-контейнер для выравнивания элементов */
+            align-items: center; /* Выравниваем элементы по центру вертикально */
+            bottom: 100px;
+        }
+        .user-info1 {
+            position: absolute; /* Позиционируем абсолютно */
+            top: 170px; /* Отступ сверху */
+            left: 545px; /* Отступ слева */
+            display: flex; /* Используем flex-контейнер для выравнивания элементов */
+            align-items: center; /* Выравниваем элементы по центру вертикально */
+            bottom: 100px;
+        }
+
+        .user-info img {
+            width: 60px; /* Размер аватара (можно изменить) */
+            border-radius: 50%; /* Делаем аватар круглым */
+            margin-right: 10px; /* Отступ между аватаром и текстом */
+        }
+
+        footer {
+            background-color: #5fac8d;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Регистрация</h1>
+    </header>
+    <div class="user-info6"> 
+        <a href="../index.html">Главная</a> 
+        <span style="margin: 0 10px;">|</span>
+        <a href="">Контакты</a>
+    </div>
+    <main>
+        <div class="user-info">
+            <img src="../images/avatar.jpg" alt="Avatar">
+            <p>Добро пожаловать, <span id="username">Гость</span>!</p>
+        </div>
+        <div class="user-info1">
+            <form action="../php/process_registration.php" method="post">
+                <div class="user-info2"> <label for="name">ФИО:</label><br> </div>
+                <input type="text" class="form-control" name="name" id="name" placeholder="Введите ФИО" required><br>
+
+             <div class="user-info3">    <label for="email">Электронная почта:</label><br> </div>
+                <input type="email" class="form-control" name="email" id="email" placeholder="Введите адрес" required><br>
+                
+             <div class="user-info4">    <label for="password">Пароль:</label> </div>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Введите пароль" required><br>
+
+        <!--       <label for="confirm_password">Подтвердить пароль:</label>
+               <input type="password" id="confirm_password" name="confirm_password" required>  -->
+
+                    <button class="btn btn-success" type="submit">Зарегистрироваться</button>
+                    <p class="user-info5">Уже есть pаккаунта? <a href="login.html">Авторизуйтесь</a> </p>
+            </form>
+        </div>
+    </main>
+    <footer>
+        &copy; 2023 Учетный сервис самозанятых
+    </footer>
+</body>
+</html>

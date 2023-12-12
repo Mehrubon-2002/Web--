@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+
+.delete-button {
+        background-color: rgb(144, 73, 73);
+        color: rgb(237, 231, 231);
+        /* Дополнительные стили, если необходимо */
+    }
+    .delete-button:hover {
+    background-color: #692020;
+}
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('../images/dashboard.jpg') no-repeat center center fixed;
+            background-size: cover;
+            background-attachment: fixed;
+            overflow-y: scroll;
+            height: 150vh; /* Занимает 100% высоты видимой области */
+        }
+
+        header {
+            background-color: #d4dad2; /* Цвет фона header (можно изменить) */
+            padding: 0.5px;
+            text-align: center;
+        }
+
+        .user-info {
+            text-align: right;
+            margin-right: 20px;
+        }
+
+        .dashboard-content {
+            margin-right: 50px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table, th, td {
+            border: 1px solid rgb(239, 235, 235);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        td {
+            background-color: #cccfc3;
+        }
+        th{
+            background-color: #737471;
+            color: aliceblue;
+        }
+
+        /* Стили для формы ввода данных */
+        .input-form {
+            margin-top: 20px;
+        }
+
+        .input-form input, .input-form button {
+            margin-top: 10px;
+        }
+        .user-info6 {
+            position: absolute; /* Позиционируем абсолютно */
+            top: -545px; /* Отступ сверху */
+            left: 1370px; /* Отступ слева */
+            display: flex; /* Используем flex-контейнер для выравнивания элементов */
+            align-items: center; /* Выравниваем элементы по центру вертикально */
+            bottom: 100px;
+        }
+
+        footer {
+            background-color: #cccfc3;
+            color: rgb(160, 153, 153);
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Личный кабинет</h1>
+    </header>
+    <main>
+        <div class="user-info6">
+            <button onclick="logout()">Выйти</button>
+        </div>
+        <div class="header">
+            <p><span id="username"></span></p>
+        </div>
+
+        <div class="dashboard-content">
+            <h2>Ваши данные:</h2>
+            
+            <div class="header">
+                <p id="welcomeMessage"></p>
+            </div>
+
+            <h2>Транзакции:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Тип операции</th>
+                        <th>Сумма</th>
+                        <th>Описание</th>
+                        <th>Изменить</th>
+                        <th>Удалить</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionTable">
+                </tbody>
+            </table>
+
+            <!-- Пример кнопки для добавления данных -->
+            <div>
+                <button onclick="location.href='inputData.html'">Ввод данных</button>
+            </div>
+        </div>
+        <div>
+            <p id="totalIncome"></p>
+            <p id="totalExpense"></p>
+        </div>
+    </main>
+    <footer>
+        &copy; 2023 Учетный сервис самозанятых
+    </footer>
+
+    <!-- Скрипты -->
+<script>
+
+
+
+    // Ваш код для выхода
+    function logout() {
+        // Создаем объект XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+
+        // Устанавливаем метод запроса и URL
+        xhr.open("GET", "../php/logout.php", true);
+
+        // Устанавливаем обработчик события для изменения состояния запроса
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Перенаправляем пользователя на страницу входа (или другую страницу)
+                window.location.href = "login.html";
+            }
+        };
+
+        // Отправляем запрос
+        xhr.send();
+    }
+
+    
+    // Для Изменить
+    function addEditButton() {
+    var editButtons = document.getElementsByClassName("edit-button");
+
+    for (var i = 0; i < editButtons.length; i++) {
+        editButtons[i].addEventListener("click", function () {
+            var row = this.parentNode.parentNode;
+            var transactionId = row.getAttribute("data-transaction-id");
+
+            // Перенаправляем пользователя на страницу редактирования с идентификатором транзакции
+            window.location.href = "editData.html?id=" + transactionId;
+        });
+    }
+}
+
+
+
+    function addDeleteButton() {
+            var deleteButtons = document.getElementsByClassName("delete-button");
+
+            for (var i = 0; i < deleteButtons.length; i++) {
+                deleteButtons[i].addEventListener("click", function() {
+                    var row = this.parentNode.parentNode;
+                    var transactionId = row.getAttribute("data-transaction-id");
+
+                    var xhrDelete = new XMLHttpRequest();
+                    xhrDelete.open("GET", "../php/delete_transaction.php?id=" + transactionId, true);
+
+                    xhrDelete.onreadystatechange = function() {
+                        if (xhrDelete.readyState == 4 && xhrDelete.status == 200) {
+                            location.reload();
+                        }
+                    };
+
+                    xhrDelete.send();
+                });
+            }
+        }
+
+        // Функция для обновления DOM элементов с общими суммами
+        function updateTotalAmounts(amounts) {
+        // Обновляем DOM элементы с общими суммами
+        document.getElementById("totalIncome").innerText = "Общая сумма доходов: " + amounts.totalIncome + " ₽";
+        document.getElementById("totalExpense").innerText = "Общая сумма расходов: " + amounts.totalExpense + " ₽";
+    }
+
+
+    // Загрузка данный имени пользователя и транзакций
+    window.onload = function() {
+        // Создаем объект XMLHttpRequest для имени пользователя
+        var xhr = new XMLHttpRequest();
+
+        // Устанавливаем метод запроса и URL
+        xhr.open("GET", "../php/getUserName.php", true);
+
+        // Устанавливаем обработчик события для изменения состояния запроса
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Обновляем содержимое элемента с id="username"
+                document.getElementById("username").innerText = "Добро пожаловать, " + xhr.responseText + "!";
+            }
+        };
+
+        // Отправляем запрос
+        xhr.send();
+
+        // Создаем объект XMLHttpRequest для транзакций
+        var xhrTransactions = new XMLHttpRequest();
+
+        // Устанавливаем метод запроса и URL
+        xhrTransactions.open("GET", "../php/get_transactions.php", true);
+
+        // Устанавливаем обработчик события для изменения состояния запроса
+        xhrTransactions.onreadystatechange = function() {
+            if (xhrTransactions.readyState == 4 && xhrTransactions.status == 200) {
+                // Обновляем содержимое таблицы данными о транзакциях
+                document.getElementById("transactionTable").innerHTML = xhrTransactions.responseText;
+                
+                // Вызываем функцию для добавления кнопок
+                addDeleteButton();
+                addEditButton();  // Добавьте эту строку
+            }
+        };
+
+        // Отправляем запрос
+        xhrTransactions.send();
+
+        // Создаем объект XMLHttpRequest для общих сумм
+        var xhrTotalAmounts = new XMLHttpRequest();
+
+        // Устанавливаем метод запроса и URL
+        xhrTotalAmounts.open("GET", "../php/getTotalAmounts.php", true);
+
+        // Устанавливаем обработчик события для изменения состояния запроса
+        xhrTotalAmounts.onreadystatechange = function() {
+            if (xhrTotalAmounts.readyState == 4 && xhrTotalAmounts.status == 200) {
+                // Парсим JSON и обновляем DOM
+                var totalAmounts = JSON.parse(xhrTotalAmounts.responseText);
+                updateTotalAmounts(totalAmounts);
+            }
+        };
+
+        // Отправляем запрос
+        xhrTotalAmounts.send();
+
+
+
+        // Устанавливаем обработчик события для изменения состояния запроса
+        // Вызываем функцию для добавления кнопок после загрузки транзакций
+        xhrTotalAmounts.onreadystatechange = function() {
+            if (xhrTotalAmounts.readyState == 4 && xhrTotalAmounts.status == 200) {
+                // Парсим JSON и обновляем DOM
+                var totalAmounts = JSON.parse(xhrTotalAmounts.responseText);
+                updateTotalAmounts(totalAmounts);
+            }
+        };
+    };
+</script>
+</body>
+</html>
